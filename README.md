@@ -1,3 +1,4 @@
+c
 #include "dshot_rmt.h"
 static dshot_channel_t escs[4];
 /* Pines de salida hacia ESC */
