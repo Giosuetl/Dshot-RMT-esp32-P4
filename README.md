@@ -1,16 +1,12 @@
 #include "dshot_rmt.h"
 static dshot_channel_t escs[4];
-
 /* Pines de salida hacia ESC */
 #define DSHOT_RESOLUTION_HZ 10000000  // 1 MHz → 1 tick = 1 µs
 #define DSHOT_TYPE DSHOT600          // 
-
-
 /* Secuencia de armado inicial */
 static void arm_escs(void)
 {
     ESP_LOGI(TAG, "Armando ESCs...");
-
     // STOP: 0 durante 500 ms
     for (int t = 0; t < 500; t++) {
         for (int i = 0; i < 4; i++) {
@@ -18,7 +14,6 @@ static void arm_escs(void)
         }
         vTaskDelay(pdMS_TO_TICKS(1)); // ~1 kHz
     }
-
     // ARM: throttle mínimo válido (48) durante 1 s
     for (int t = 0; t < 1000; t++) {
         for (int i = 0; i < 4; i++) {
@@ -26,7 +21,6 @@ static void arm_escs(void)
         }
         vTaskDelay(pdMS_TO_TICKS(1));
     }
-
     ESP_LOGI(TAG, "ESCs armados");
 }
 main{
@@ -36,18 +30,13 @@ main{
     escs[1].channel= NULL;
     escs[2].channel= NULL;
     escs[3].channel= NULL;
-
     ESP_ERROR_CHECK(dshot_init_channel(&escs[0], GPIO_NUM_33, DSHOT_RESOLUTION_HZ, DSHOT_TYPE));
-
     ESP_ERROR_CHECK(dshot_init_channel(&escs[1], GPIO_NUM_26, DSHOT_RESOLUTION_HZ, DSHOT_TYPE));
-
     ESP_ERROR_CHECK(dshot_init_channel(&escs[2], GPIO_NUM_32, DSHOT_RESOLUTION_HZ, DSHOT_TYPE));
  
     ESP_ERROR_CHECK(dshot_init_channel(&escs[3],GPIO_NUM_27, DSHOT_RESOLUTION_HZ, DSHOT_TYPE));
-
     ESP_LOGI(TAG, "Esperando ESCs (2s)...");
     vTaskDelay(pdMS_TO_TICKS(3000));
-
     arm_escs();
         dshot_send(&escs[0], map1, false);
         dshot_send(&escs[1], map2, false);
